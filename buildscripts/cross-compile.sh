@@ -28,7 +28,7 @@ function _init() {
     export CGO_ENABLED=0
 
     ## List of architectures and OS to test coss compilation.
-    SUPPORTED_OSARCH="linux/ppc64le linux/mips64 linux/arm64 linux/s390x darwin/arm64 darwin/amd64 freebsd/amd64 windows/amd64 linux/arm linux/386 netbsd/amd64 linux/mips openbsd/amd64"
+    SUPPORTED_OSARCH="linux/mips64 linux/arm64 linux/amd64 darwin/arm64 darwin/amd64 windows/amd64 "
 }
 
 function _build() {
@@ -39,12 +39,14 @@ function _build() {
     package=$(go list -f '{{.ImportPath}}')
     printf -- "--> %15s:%s\n" "${osarch}" "${package}"
 
+    mkdir -p ./release/${os}_${arch}
+
     # Go build to build the binary.
     export GOOS=$os
     export GOARCH=$arch
     export GO111MODULE=on
     export CGO_ENABLED=0
-    go build -tags kqueue -o /dev/null
+    go build -tags kqueue -o ./release/${os}_${arch}/
 }
 
 function main() {
